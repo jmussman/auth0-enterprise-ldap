@@ -1,0 +1,11 @@
+{
+    "LDAP_BASE": "dc=dev-43633848, dc=oktapreview, dc=com",
+    "LDAP_BASE_GROUPS": "ou=groups, dc=dev-43633848, dc=oktapreview, dc=com",
+    "LDAP_URL": "ldaps://dev-43633848.ldap.oktapreview.com",
+    "LDAP_BIND_USER": "uid=ldap.bind@pyrates.live, ou=users, dc=dev-43633848, dc=oktapreview, dc=com",
+    "LDAP_USER_BY_NAME": "(uid={0})",
+    "LDAP_SEARCH_QUERY": "(&(objectClass=inetOrgPerson)(cn={0}))",
+    "LDAP_SEARCH_ALL_QUERY": "(objectClass=inetOrgPerson)",
+    "LDAP_SEARCH_GROUPS": "(&(objectClass=groupOfUniqueNames)(uniqueMember={0}))",
+    "GROUPS": true,
+}
