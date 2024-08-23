@@ -16,7 +16,7 @@ Some setup is required.
 You can use your own LDAP server, an Okta organization (tennt) with the LDAP server enabled,
 or just use the server I have set up and is publically available at ldaps://dev-43633848.oktapreview.com.
 The actual Okta organization URI must be used for LDAP, not a custom domain, which is
-why the random organiztion nbame in this URI (itself a free Okta developer tenant).
+why the random organiztion name in this URI (itself a free Okta developer tenant).
 This LDAP server is secure: none of the users defined below for authentication can
 log into the tenant itself, they cannot reach the Okta user dashboard, and their passwords
 cannot be changed through LDAP.
@@ -108,7 +108,7 @@ Add a Password Policy at the top of the list of Password Policies named *Deny LD
 1. Add a single rule to the policy for all users anywhere that denys changing passwords.
 This is all to block passwords from being changed through LDAP if you are publishing those passwords for test accounts (as I am).
 
-1. Go to Security &rarr Global Session Policy and configure a policy for the groups *LDAP Read-Only* and *LDAP Users*:
+1. Go to Security &rarr; Global Session Policy and configure a policy for the groups *LDAP Read-Only* and *LDAP Users*:
     1. Make sure this policy is *first* in the list!
     1. Add a single rule that if if the user authenticates via the LDAP interface a password is required and MFA is not required (no MFA for the demonstration).
 
@@ -131,6 +131,8 @@ MFA should be kicking in for all admin users anysays, as a second layer of secur
     ![okta-authentication-rule](./.assets/okta-authentication-rule.png)
 
 1. Open the authentication policy for the *Okta Dashboard*.
+This is to prevent the bind and test users from accessing the dashboard and attempting to
+change their passwords.
 
 1. Add a new rule named *Deny LDAP Read-Only and LDAP Users.
     1. Deny access to the end-user dashboard.
@@ -158,8 +160,8 @@ Note that Okta LDAP uses the "uid" attribute for the username, not "cn", which i
 Also, Okta LDAP uses the more popular "inetOrgPerson", "groupOfUniqueNames", and "uniqueMember" attributes in place of the "person", "group", and "member" attributes served
 by Active Directory.
 
-The JSON entries for the public server at ldaps://dev-43633848.ldap.oktapreview.com are in the project
-file [ad-ldap-configuration.json](file://./ad-ldap-configuration.json).
+These JSON entries for the public server at ldaps://dev-43633848.ldap.oktapreview.com are also saved
+in the repository project file [ad-ldap-configuration.json](file://./ad-ldap-configuration.json).
 
 ## Configure the Auth0 Enterprise Connection (and the AD/LDAP connector)
 
@@ -276,6 +278,10 @@ section above.
 
     ![auth0-connector-online](./.assets/auth0-connector-online.png)
 
+    If it isn't, check both the logs on the Auth0 tenant and for the agent, *logs.log* in the agent installation folder.
+    The agent will only be green if it can connect to both LDAP and Auth0.
+    A common error is "LDAP 49", the credentials for the LDAP server are bad.
+
 1. Make sure the enterprise connection is enabled for the appropriate applications;
 this may be the whole point of the enterprise connection, the partner users are the only ones authorized for particular applications.
 
@@ -290,10 +296,10 @@ If you connected to the public LDAP server at ldaps://dev-43633848.ldap.oktaprev
     |calicojack@pyrates.live|P!rates17|Jack Rackham|
     |mary.read@pyrates.live|P!rates17|Mary Read|
 
-1. Gotcha: The user's full name is not set into the "name" profile attribute, rather the user's email address is.
-This attribute is translated from the source by the Auth0 AD/LDAP connector in error, even if the full name is present.
+1. Gotcha: The user's full name in the Auth0 tenant is not set into the "name" profile attribute, rather the user's email address is set.
+This attribute is translated poorly from the source by the Auth0 AD/LDAP connector, even if the full name is present.
 This is contradictory to the [profile schema](https://auth0.com/docs/manage-users/user-accounts/user-profiles/user-profile-structure)
-defined by Auth0.
+defined by Auth0, but it is the choice of the agent.
 
 1. Gotcha: try testing with Blackbeard and check the account created in Auth0.
 You will find that blackbeard@pyrates.live does not appear in the profile, only the email address edward.teach@pyrates.live.
