@@ -21,6 +21,10 @@ This LDAP server is secure: none of the users defined below for authentication c
 log into the tenant itself, they cannot reach the Okta user dashboard, and their passwords
 cannot be changed through LDAP.
 
+This is one of a series of action script and configuration examples that may be used as a foundation for building
+systems that you need.
+Search GitHub for *jmussman/auth0* to find other examples in the series.
+
 ## The Auth0 AD/LDAP Connector
 
 The [Auth0 AD/LDAP Connector](https://auth0.com/docs/authenticate/identity-providers/enterprise-identity-providers/active-directory-ldap/ad-ldap-connector)
